@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<!-- iPhone 16 Pro Max optimized -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Paris 2026">
+<meta name="theme-color" content="#87CEEB">
+<meta name="format-detection" content="telephone=no">
+<!-- Add to Home Screen icon -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗼</text></svg>">
+<!-- iOS Splash Screen -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Paris 2026 — Rodrigo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky-top:#87CEEB;--sky-bot:#D6EEFA;
+  --accent:#2563EB;--green:#059669;--amber:#D97706;--red:#DC2626;--purple:#7C3AED;--pink:#DB2777;
+  --surface:rgba(255,255,255,0.88);--surface2:rgba(255,255,255,0.65);
+  --text:#0F172A;--text2:#475569;--text3:#94A3B8;
+  --border:rgba(0,0,0,0.07);--shadow:0 2px 16px rgba(0,0,0,0.07);--shadow-md:0 4px 24px rgba(0,0,0,0.10);
+  --r:16px;--font:'Inter',sans-serif;--serif:'Playfair Display',serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font);background:var(--sky-top);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+#sky{position:fixed;inset:0;z-index:0;transition:background 5s ease}
+#sky::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 700px 200px at 15% 25%,rgba(255,255,255,.38) 0%,transparent 70%),
+             radial-gradient(ellipse 400px 130px at 78% 18%,rgba(255,255,255,.28) 0%,transparent 70%);
+  animation:cls 50s ease-in-out infinite alternate;pointer-events:none}
+@keyframes cls{0%{transform:translateX(0)}100%{transform:translateX(50px)}}
+
+#app{position:relative;z-index:1}
+
+/* ─ HEADER ─ */
+#hdr{position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(255,255,255,.78);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.7);
+  padding:calc(env(safe-area-inset-top, 0px) + 11px) max(15px, env(safe-area-inset-right)) 9px max(15px, env(safe-area-inset-left))}
+.hdr-row{display:flex;align-items:center;gap:10px}
+.av{width:38px;height:38px;border-radius:50%;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;
+  box-shadow:0 2px 8px rgba(37,99,235,.3)}
+.hdr-mid{flex:1;min-width:0}
+.hdr-name{font-size:14px;font-weight:600;color:var(--text)}
+.hdr-loc{font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
+.wx-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.9);
+  border:1px solid rgba(0,0,0,.06);border-radius:20px;padding:5px 10px;flex-shrink:0;
+  box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.wx-pill span{font-size:19px}
+.wx-pill strong{font-size:14px;font-weight:600;color:var(--text)}
+.wx-pill small{font-size:10px;color:var(--text2)}
+.prog-wrap{margin-top:9px}
+.prog-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:3px}
+.prog-track{height:3px;background:rgba(0,0,0,.07);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),#7C3AED);transition:width .7s cubic-bezier(.4,0,.2,1)}
+
+/* ─ TABS ─ */
+#tabs{position:sticky;top:calc(85px + env(safe-area-inset-top, 0px));z-index:190;
+  background:rgba(255,255,255,.75);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.6);
+  display:flex;gap:0;overflow-x:auto;scrollbar-width:none;padding:0 15px}
+#tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:9px 13px;font-size:12px;font-weight:500;color:var(--text2);
+  background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;
+  transition:all .2s;white-space:nowrap}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+
+/* ─ CONTENT ─ */
+#content{padding-top:6px;padding-bottom:calc(88px + env(safe-area-inset-bottom, 0px))}
+.day-panel{display:none}
+.day-panel.active{display:block}
+
+/* ─ MAP ─ */
+.map-card{margin:12px 14px;border-radius:var(--r);overflow:hidden;height:270px;position:relative;
+  box-shadow:var(--shadow-md);border:1px solid rgba(255,255,255,.9)}
+.gmap-div{width:100%;height:100%}
+.map-you{position:absolute;top:10px;left:10px;z-index:10;background:white;border-radius:20px;
+  padding:5px 10px;display:flex;align-items:center;gap:5px;box-shadow:0 2px 8px rgba(0,0,0,.12);
+  font-size:11px;font-weight:600;color:var(--text);pointer-events:none}
+.yd{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:ydot 1.5s ease infinite}
+@keyframes ydot{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.6)}50%{box-shadow:0 0 0 5px rgba(37,99,235,0)}}
+.sv-btn{position:absolute;bottom:10px;right:10px;z-index:10;background:white;border-radius:20px;
+  padding:6px 12px;display:flex;align-items:center;gap:5px;box-shadow:0 2px 8px rgba(0,0,0,.12);
+  font-size:11px;font-weight:600;cursor:pointer;border:1px solid rgba(0,0,0,.06);transition:all .15s}
+.sv-btn:active{transform:scale(.95);background:#F0F9FF}
+
+/* ─ SV MODAL ─ */
+#sv-modal{position:fixed;inset:0;z-index:1000;display:none;flex-direction:column;background:rgba(0,0,0,.55);backdrop-filter:blur(4px)}
+#sv-modal.open{display:flex}
+.sv-top{background:white;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.sv-top-title{flex:1;font-size:14px;font-weight:600;color:var(--text)}
+.sv-close{width:30px;height:30px;border-radius:50%;background:#F1F5F9;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text2)}
+#sv-pano{flex:1}
+
+/* ─ DAY HEADER ─ */
+.dh{margin:0 14px 10px;background:var(--surface);border-radius:var(--r);padding:15px;
+  box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.95);backdrop-filter:blur(10px);
+  border-top-width:3px}
+.dh.d0{border-top-color:#3B82F6}.dh.d1{border-top-color:#10B981}.dh.d2{border-top-color:#F59E0B}
+.dh.d3{border-top-color:#EC4899}.dh.d4{border-top-color:#EF4444}.dh.d5{border-top-color:#8B5CF6}
+.dh-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.dh-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px}
+.d0 .dh-badge{background:#DBEAFE;color:#1D4ED8}.d1 .dh-badge{background:#D1FAE5;color:#065F46}
+.d2 .dh-badge{background:#FEF3C7;color:#92400E}.d3 .dh-badge{background:#FCE7F3;color:#831843}
+.d4 .dh-badge{background:#FEE2E2;color:#991B1B}.d5 .dh-badge{background:#EDE9FE;color:#5B21B6}
+.dh-comp{font-size:11px;color:var(--text2);margin-left:auto}
+.dh-title{font-family:var(--serif);font-size:18px;color:var(--text);line-height:1.3;margin-bottom:3px}
+.dh-sub{font-size:12px;color:var(--text2)}
+.hotel-tag{display:inline-flex;align-items:center;gap:4px;margin-top:7px;padding:3px 9px;border-radius:20px;background:#EFF6FF;border:1px solid #BFDBFE;font-size:11px;font-weight:500;color:#1D4ED8}
+
+/* ─ TIMELINE ─ */
+.timeline{padding:0 14px;display:flex;flex-direction:column;gap:0}
+
+.tl-item{display:flex;gap:0;position:relative}
+/* vertical line */
+.tl-item:not(:last-child) .tl-line{position:absolute;left:19px;top:40px;bottom:-8px;width:1.5px;background:rgba(0,0,0,.08);z-index:0}
+
+.tl-left{display:flex;flex-direction:column;align-items:center;width:38px;flex-shrink:0;padding-top:8px}
+.tl-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;z-index:1;flex-shrink:0;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.tl-time{font-size:9px;font-weight:600;color:var(--text2);margin-top:3px;font-family:var(--font)}
+
+.tl-card{flex:1;background:var(--surface);border:1px solid rgba(255,255,255,.9);border-radius:14px;
+  margin:4px 0 8px 6px;box-shadow:var(--shadow);backdrop-filter:blur(8px);
+  overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative}
+.tl-card:active{transform:scale(.985);box-shadow:0 1px 8px rgba(0,0,0,.07)}
+/* left accent */
+.tl-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:4px 0 0 4px}
+.tl-card.c-main::before{background:var(--accent)}
+.tl-card.c-walk::before{background:var(--green)}
+.tl-card.c-metro::before{background:#7C3AED}
+.tl-card.c-food::before{background:var(--green)}
+.tl-card.c-shop::before{background:var(--pink)}
+.tl-card.c-night::before{background:var(--purple)}
+.tl-card.c-ticket::before{background:var(--amber)}
+.tl-card.c-hotel::before{background:var(--accent)}
+.tl-card.c-warn::before{background:var(--red)}
+
+.tl-body{padding:11px 11px 10px 13px}
+.tl-top{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.tl-badge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:8px;text-transform:uppercase;letter-spacing:.4px}
+.b-main{background:#DBEAFE;color:#1D4ED8}.b-walk{background:#D1FAE5;color:#065F46}
+.b-metro{background:#EDE9FE;color:#5B21B6}.b-food{background:#D1FAE5;color:#065F46}
+.b-shop{background:#FCE7F3;color:#831843}.b-night{background:#EDE9FE;color:#5B21B6}
+.b-ticket{background:#FEF3C7;color:#92400E}.b-hotel{background:#DBEAFE;color:#1D4ED8}
+.b-warn{background:#FEE2E2;color:#991B1B}.b-info{background:#F1F5F9;color:#475569}
+.tl-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.3;padding-right:26px}
+.tl-desc{font-size:12px;color:var(--text2);line-height:1.55}
+.tl-meta{padding:0 12px 10px;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:10px;background:#F1F5F9;color:var(--text2);border:1px solid rgba(0,0,0,.06)}
+.chip.walk{background:#ECFDF5;color:#065F46;border-color:#A7F3D0}
+.chip.metro{background:#EDE9FE;color:#5B21B6;border-color:#C4B5FD}
+.chip.warn{background:#FEF2F2;color:#991B1B;border-color:#FECACA}
+.mdot{width:15px;height:15px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:8px;font-weight:700}
+.m1{background:#F2CD00;color:#000}.m2{background:#A0006E;color:#fff}.m4{background:#6560AB;color:#fff}
+.m6{background:#79BB92;color:#fff}.m9{background:#B7A52F;color:#fff}.rb{background:#4A9EFF;color:#fff}.rc{background:#F5C400;color:#000}
+.tkc{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:10px;background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;font-weight:500}
+.tkc.ok{background:#D1FAE5;color:#065F46;border-color:#A7F3D0}
+.dur-chip{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:10px;background:#F0F9FF;color:#0369A1;border:1px solid #BAE6FD;font-weight:500}
+.chk{position:absolute;top:9px;right:9px;width:24px;height:24px;border-radius:50%;background:#F1F5F9;border:1.5px solid #E2E8F0;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;z-index:5;transition:all .15s}
+.chk:active{transform:scale(.88)}
+.tl-card.done{opacity:.5}.tl-card.done .chk{background:#D1FAE5;border-color:#6EE7B7}
+
+/* expand */
+.tl-detail{display:none;padding:8px 12px 12px;border-top:1px solid #F1F5F9}
+.tl-detail.open{display:block}
+.detail-stars{display:flex;align-items:center;gap:4px;margin-bottom:5px}
+.stars{color:#F59E0B;font-size:13px;letter-spacing:-1px}
+.rnum{font-size:12px;font-weight:700;color:var(--text)}
+.rcnt{font-size:10px;color:var(--text2)}
+.htag{display:inline-block;margin-bottom:5px;padding:2px 8px;border-radius:8px;font-size:10px;background:#F0FDF4;color:#166534;border:1px solid #BBF7D0}
+.dinfo{font-size:11px;color:var(--text2);line-height:1.65;margin-bottom:7px}
+.abtns{display:flex;gap:6px}
+.abtn{flex:1;padding:8px;border-radius:10px;background:#F8FAFC;border:1px solid #E2E8F0;color:var(--accent);font-size:11px;font-weight:600;font-family:var(--font);cursor:pointer;text-align:center;display:flex;align-items:center;justify-content:center;gap:4px;text-decoration:none;transition:all .15s}
+.abtn:active{background:#EFF6FF;transform:scale(.97)}
+.abtn.sv{color:#059669;background:#F0FDF4;border-color:#BBF7D0}
+
+/* ─ OVERVIEW ─ */
+#ov{display:none;padding:14px}
+.ov-hero{background:var(--surface);border-radius:var(--r);padding:22px;text-align:center;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.95);backdrop-filter:blur(10px)}
+.ov-t{font-family:var(--serif);font-size:28px;color:var(--text);letter-spacing:-.5px}
+.ov-s{font-size:13px;color:var(--text2);margin-top:3px}
+.ov-d{font-size:12px;font-weight:600;color:var(--accent);margin-top:5px}
+.sect-label{font-size:11px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.8px;margin:0 0 8px}
+.ci{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--surface);border:1px solid rgba(255,255,255,.9);border-radius:12px;margin-bottom:6px;box-shadow:var(--shadow);backdrop-filter:blur(8px);cursor:pointer}
+.ci-i{font-size:18px}.ci-b{flex:1}.ci-n{font-size:13px;font-weight:500;color:var(--text)}.ci-d{font-size:11px;color:var(--text2);margin-top:1px}.ci-s{font-size:16px}
+.comp-row{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--surface);border:1px solid rgba(255,255,255,.9);border-radius:12px;margin-bottom:6px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
+.comp-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;background:#EFF6FF;flex-shrink:0}
+.comp-n{font-size:13px;font-weight:600;color:var(--text)}.comp-p{font-size:11px;color:var(--text2)}
+.comp-t{margin-left:auto;font-size:10px;padding:2px 8px;border-radius:8px}
+.ta{background:#D1FAE5;color:#065F46}.tl2{background:#DBEAFE;color:#1D4ED8}
+.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px}
+.ovc{background:var(--surface);border:1px solid rgba(255,255,255,.9);border-radius:12px;padding:13px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
+.ovc:active{transform:scale(.97)}.ov-date{font-size:10px;color:var(--text2);font-weight:500;margin-bottom:3px}
+.ov-tt{font-size:12px;font-weight:600;color:var(--text);line-height:1.4}
+.ov-cc{font-size:10px;color:var(--text2);margin-top:3px;display:flex;align-items:center;gap:4px}
+.odot{width:6px;height:6px;border-radius:50%}
+
+/* ─ BOTTOM NAV ─ */
+#bnav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(255,255,255,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.8);display:flex;padding:8px max(env(safe-area-inset-right),0px) calc(env(safe-area-inset-bottom, 0px) + 6px) max(env(safe-area-inset-left),0px)}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 4px;background:none;border:none;cursor:pointer;color:var(--text3);font-size:9px;font-family:var(--font);font-weight:500;transition:color .15s;letter-spacing:.3px}
+.nb:active,.nb.active{color:var(--accent)}.ni{font-size:20px}
+
+/* ─ TOAST ─ */
+#toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%) translateY(16px);background:white;border:1px solid #E2E8F0;border-radius:20px;padding:9px 16px;font-size:13px;color:var(--text);z-index:9000;transition:all .25s;white-space:nowrap;opacity:0;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ─ ANIMS ─ */
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.day-panel.active .tl-item{animation:up .22s ease both}
+.day-panel.active .tl-item:nth-child(1){animation-delay:.03s}
+.day-panel.active .tl-item:nth-child(2){animation-delay:.07s}
+.day-panel.active .tl-item:nth-child(3){animation-delay:.11s}
+.day-panel.active .tl-item:nth-child(4){animation-delay:.15s}
+.day-panel.active .tl-item:nth-child(5){animation-delay:.19s}
+.day-panel.active .tl-item:nth-child(6){animation-delay:.23s}
+.day-panel.active .tl-item:nth-child(7){animation-delay:.27s}
+.day-panel.active .tl-item:nth-child(8){animation-delay:.31s}
+.day-panel.active .tl-item:nth-child(9){animation-delay:.35s}
+.day-panel.active .tl-item:nth-child(10){animation-delay:.39s}
+
+/* ─ iPHONE 16 PRO MAX OPTIMIZATIONS ─ */
+
+/* Prevent text size adjustment on rotation */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+/* Momentum scrolling everywhere */
+* { -webkit-overflow-scrolling: touch; }
+
+/* Better font rendering on Retina */
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+/* Prevent callouts on long press (images, links) */
+a, img, button { -webkit-touch-callout: none; }
+
+/* Minimum touch target 44pt (Apple HIG) */
+.tab, .nb, .chk, .sv-close, .sv-btn { min-height: 44px; min-width: 44px; }
+.nb { min-height: 50px; }
+
+/* Larger tap areas for timeline check buttons */
+.chk { width: 32px !important; height: 32px !important; font-size: 14px !important; }
+
+/* Cards: remove 300ms tap delay */
+.tl-card, .ovc, .ci, .comp-row, .abtn { touch-action: manipulation; }
+
+/* Smooth scrolling on iOS */
+#tabs, #content, #ov { -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
+
+/* Street View modal: full safe area */
+#sv-modal { padding-top: env(safe-area-inset-top, 0px); }
+.sv-top { padding: 12px max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left)); }
+
+/* Map cards: slightly taller on Pro Max */
+.map-card { height: 280px; }
+
+/* Timeline items: better touch spacing */
+.tl-card { margin: 6px 0 10px 6px; }
+.tl-body { padding: 13px 13px 11px 14px; }
+.tl-meta { padding: 0 13px 12px; gap: 6px; }
+
+/* Bigger text on Pro Max (430px wide = 6.1" display) */
+@media (min-width: 390px) {
+  .tl-title { font-size: 15px; }
+  .tl-desc { font-size: 12.5px; }
+  .dh-title { font-size: 19px; }
+  .hdr-name { font-size: 15px; }
+}
+
+/* Handle Dynamic Island (iPhone 14 Pro+) */
+@supports (padding: env(safe-area-inset-top)) {
+  #hdr { padding-top: calc(env(safe-area-inset-top, 14px) + 6px); }
+}
+
+/* Prevent rubber-band scrolling showing white */
+html, body { background: var(--sky-top); overscroll-behavior: none; }
+
+/* SV modal full screen proper */
+#sv-modal { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+/* Better scrollbar hiding */
+#tabs::-webkit-scrollbar,
+#content::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+/* Haptic-friendly active states */
+.tl-card:active { background: rgba(255,255,255,0.95) !important; }
+.ovc:active { background: rgba(255,255,255,0.95) !important; }
+
+/* Bottom nav icons bigger for Pro Max */
+.ni { font-size: 22px; }
+.nb { font-size: 10px; }
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<div id="app">
+
+<!-- SV MODAL -->
+<div id="sv-modal">
+  <div class="sv-top">
+    <div class="sv-top-title" id="sv-lbl">Street View</div>
+    <button class="sv-close" onclick="closeSV()">✕</button>
+  </div>
+  <div id="sv-pano"></div>
+</div>
+
+<div id="toast"></div>
+
+<!-- HEADER -->
+<div id="hdr">
+  <div class="hdr-row">
+    <div class="av">🧳</div>
+    <div class="hdr-mid">
+      <div class="hdr-name">Rodrigo Dórea — Paris</div>
+      <div class="hdr-loc" id="hdr-loc">8º arrondissement · Hotel Le Colisée</div>
+    </div>
+    <div class="wx-pill">
+      <span id="wx-i">☀️</span>
+      <strong id="wx-t">33°</strong>
+      <small id="wx-s">Quente</small>
+    </div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-labels"><span id="pl">Dia 1 de 6</span><span id="px">0 paradas concluídas</span></div>
+    <div class="prog-track"><div class="prog-fill" id="pf" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div id="tabs" style="margin-top:calc(85px + env(safe-area-inset-top, 0px))">
+  <button class="tab" onclick="showOV()">Visão geral</button>
+  <button class="tab active" onclick="showDay(0)" id="t0">30 jun</button>
+  <button class="tab" onclick="showDay(1)" id="t1">01 jul</button>
+  <button class="tab" onclick="showDay(2)" id="t2">02 jul</button>
+  <button class="tab" onclick="showDay(3)" id="t3">03 jul</button>
+  <button class="tab" onclick="showDay(4)" id="t4">04 jul</button>
+  <button class="tab" onclick="showDay(5)" id="t5">05 jul</button>
+</div>
+
+<div id="content">
+<div id="ov">
+  <div class="ov-hero">
+    <div class="ov-t">Paris 2026</div>
+    <div class="ov-s">Rodrigo Dórea · Roteiro de viagem</div>
+    <div class="ov-d">30 junho → 05 julho · 6 dias · 2 hotéis</div>
+  </div>
+  <div class="sect-label">Ingressos</div>
+  <div id="tklist">
+    <div class="ci" onclick="toggleTk(0)"><div class="ci-i">🏛</div><div class="ci-b"><div class="ci-n">Arco do Triunfo</div><div class="ci-d">30 jun · ~€16 · paris-arc-de-triomphe.fr</div></div><div class="ci-s" id="tk0">⬜</div></div>
+    <div class="ci" onclick="toggleTk(1)"><div class="ci-i">🗼</div><div class="ci-b"><div class="ci-n">Torre Eiffel</div><div class="ci-d">30 jun · ~€29 · toureiffel.paris</div></div><div class="ci-s" id="tk1">⬜</div></div>
+    <div class="ci"><div class="ci-i">🏰</div><div class="ci-b"><div class="ci-n">Versalhes</div><div class="ci-d">02 jul · 11h · Comprado ✅</div></div><div class="ci-s">✅</div></div>
+    <div class="ci"><div class="ci-i">🎨</div><div class="ci-b"><div class="ci-n">Musée d’Orsay</div><div class="ci-d">03 jul · Confirmado ✅</div></div><div class="ci-s">✅</div></div>
+    <div class="ci" onclick="toggleTk(4)"><div class="ci-i">🌸</div><div class="ci-b"><div class="ci-n">Orangerie · 9h</div><div class="ci-d">04 jul · ~€12 · musee-orangerie.fr</div></div><div class="ci-s" id="tk4">⬜</div></div>
+    <div class="ci"><div class="ci-i">🎨</div><div class="ci-b"><div class="ci-n">Louvre · 12h</div><div class="ci-d">04 jul · Comprado ✅</div></div><div class="ci-s">✅</div></div>
+  </div>
+  <div class="sect-label" style="margin-top:14px">Companheiros</div>
+  <div class="comp-row"><div class="comp-av">👨</div><div><div class="comp-n">André</div><div class="comp-p">30 jun → 03 jul</div></div><div class="comp-t ta">com você</div></div>
+  <div class="comp-row"><div class="comp-av">👩</div><div><div class="comp-n">Karine (irmã)</div><div class="comp-p">03 jul → Viena</div></div><div class="comp-t tl2">a chegar</div></div>
+  <div class="comp-row"><div class="comp-av">👴</div><div><div class="comp-n">Bruno (tio)</div><div class="comp-p">05–08 jul · Viena</div></div><div class="comp-t tl2">Viena</div></div>
+  <div class="sect-label" style="margin-top:14px">Dias</div>
+  <div class="ov-grid">
+    <div class="ovc" onclick="showDay(0)"><div class="ov-date">30 jun (seg)</div><div class="ov-tt">Chegada · Champs · Torre</div><div class="ov-cc"><div class="odot" style="background:#3B82F6"></div>10 paradas</div></div>
+    <div class="ovc" onclick="showDay(1)"><div class="ov-date">01 jul (ter)</div><div class="ov-tt">Marais · Solo à noite</div><div class="ov-cc"><div class="odot" style="background:#10B981"></div>10 paradas</div></div>
+    <div class="ovc" onclick="showDay(2)"><div class="ov-date">02 jul (qua)</div><div class="ov-tt">Versalhes · Montmartre</div><div class="ov-cc"><div class="odot" style="background:#F59E0B"></div>8 paradas</div></div>
+    <div class="ovc" onclick="showDay(3)"><div class="ov-date">03 jul (qui)</div><div class="ov-tt">Troca hotel · Orsay</div><div class="ov-cc"><div class="odot" style="background:#EC4899"></div>8 paradas</div></div>
+    <div class="ovc" onclick="showDay(4)"><div class="ov-date">04 jul (sex)</div><div class="ov-tt">Orangerie · Louvre · Sena 🚢</div><div class="ov-cc"><div class="odot" style="background:#EF4444"></div>9 paradas</div></div>
+    <div class="ovc" onclick="showDay(5)"><div class="ov-date">05 jul (sáb)</div><div class="ov-tt">Manhã livre · Voo Viena</div><div class="ov-cc"><div class="odot" style="background:#8B5CF6"></div>6 paradas</div></div>
+  </div>
+</div>
+<div id="days-wrap"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div id="bnav">
+  <button class="nb active" onclick="showDay(curDay)"><span class="ni">📅</span>Dia</button>
+  <button class="nb" onclick="showOV()"><span class="ni">🗺</span>Geral</button>
+  <button class="nb" onclick="showOV()"><span class="ni">🎟</span>Tickets</button>
+  <button class="nb" onclick="showDay(curDay)"><span class="ni">🌤</span>Clima</button>
+</div>
+</div>
+
+<script>
+const GKEY = 'AIzaSyCRVf_89o9Hu5G7cQHIWry15qCXHVLTwqw';
+
+// ── SKY THEMES ────────────────────────────────────────────────────────────
+const SKIES = {
+  sun:   ['#5BBDE4','#87CEEB','#C8E8F8'],
+  part:  ['#6FB8D8','#96CDE4','#CBE8F5'],
+  cloud: ['#8AAEBB','#AABFCA','#C8D9E2'],
+  rain:  ['#708EA0','#90A8B5','#B5C8D2'],
+  night: ['#1B2F52','#2A4070','#3A5590'],
+};
+function setSky(code){
+  const h=new Date().getHours();
+  let s;
+  if(h<6||h>21) s=SKIES.night;
+  else if(code===0) s=SKIES.sun;
+  else if(code<=2) s=SKIES.part;
+  else if(code<=3) s=SKIES.cloud;
+  else s=SKIES.rain;
+  document.getElementById('sky').style.background=`linear-gradient(150deg,${s[0]} 0%,${s[1]} 50%,${s[2]} 100%)`;
+}
+
+// ── CLIMATE DATA (Paris July historical averages — offline fallback) ──────
+const CLIMATE = [
+  // 30jun,01jul,02jul,03jul,04jul,05jul
+  {max:33,min:18,code:1,icon:'🌤',desc:'Parcialmente ensolarado'},
+  {max:34,min:19,code:0,icon:'☀️',desc:'Ensolarado'},
+  {max:32,min:19,code:2,icon:'⛅',desc:'Nublado parcial'},
+  {max:31,min:18,code:1,icon:'🌤',desc:'Ensolarado'},
+  {max:33,min:20,code:0,icon:'☀️',desc:'Ensolarado'},
+  {max:30,min:18,code:1,icon:'🌤',desc:'Bom tempo'},
+];
+// Try live data — if fails, use historical
+async function loadWeather(){
+  try{
+    const url='https://api.open-meteo.com/v1/forecast?latitude=48.8566&longitude=2.3522&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Europe%2FParis&forecast_days=16';
+    const r=await fetch(url);const d=await r.json();
+    // find index for 2026-06-30
+    const dates=d.daily.time;
+    const idx=dates.indexOf('2026-06-30');
+    if(idx>=0){
+      for(let i=0;i<6;i++){
+        const c=d.daily.weathercode[idx+i];
+        const mx=Math.round(d.daily.temperature_2m_max[idx+i]);
+        const mn=Math.round(d.daily.temperature_2m_min[idx+i]);
+        CLIMATE[i]={max:mx,min:mn,code:c,icon:codeIcon(c),desc:codeDesc(c)};
+      }
+    }
+  }catch(e){}
+  applyWeather(0);
+}
+const WI={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',51:'🌦',61:'🌧',80:'🌦',95:'⛈'};
+const WD={0:'Céu limpo',1:'Ensolarado',2:'Nublado parcial',3:'Nublado',45:'Neblina',51:'Garoa',61:'Chuva',80:'Pancadas',95:'Tempestade'};
+function codeIcon(c){return WI[c]||'🌤'}
+function codeDesc(c){return WD[c]||'Bom tempo'}
+function applyWeather(idx){
+  const w=CLIMATE[idx]||CLIMATE[0];
+  document.getElementById('wx-i').textContent=w.icon;
+  document.getElementById('wx-t').textContent=w.max+'°';
+  document.getElementById('wx-s').textContent=w.min+'° min';
+  setSky(w.code);
+}
+
+// ── DAY DATA (with realistic step-by-step logistics) ──────────────────────
+const DAYS = [
+{
+  idx:0,cls:'d0',badge:'30 jun',date:'30 jun · seg',
+  title:'Chegada · Champs-Élysées · Torre Eiffel',
+  sub:'Hotel Le Colisée · 8º arrondissement',
+  hotel:'Le Colisée · check-in 14h',comp:'👤 André',
+  loc:'8º arr. · Le Colisée',
+  center:{lat:48.872,lng:2.302},zoom:14,
+  svDefault:{lat:48.8738,lng:2.295},
+  markers:[
+    {lat:49.0097,lng:2.5479,icon:'✈️',c:'#94A3B8',label:'CDG — Uber/Bolt daqui'},
+    {lat:48.869,lng:2.308,icon:'🏨',c:'#2563EB',label:'Le Colisée'},
+    {lat:48.8738,lng:2.295,icon:'🏛',c:'#D97706',label:'Arco do Triunfo'},
+    {lat:48.8584,lng:2.2945,icon:'🗼',c:'#EF4444',label:'Torre Eiffel'},
+    {lat:48.853,lng:2.3323,icon:'🍷',c:'#059669',label:'Saint-Germain'},
+  ],
+  steps:[
+    {time:'08:00',cat:'hotel',icon:'✈️',title:'Pousou em CDG — desembarcou',
+     desc:'Você acabou de aterrissar. Agora precisa sair do Terminal 2 e chegar ao hotel.',
+     chips:[{t:'Terminal 2E · Condor'}],dur:null,tk:null,
+     sv:{lat:49.009,lng:2.548},stars:null,hours:null,
+     info:'Siga as placas "Bagagem" e depois "RER/Trains". Procure as máquinas azuis do RER B.',
+     gmaps:'https://maps.google.com/?q=CDG+Airport+Paris+Terminal+2'},
+    {time:'08:20',cat:'metro',icon:'🚗',title:'Uber/Bolt/Taxi: CDG → Hotel Le Colisée',
+     desc:'Com malas e depois de uma viagem longa, pegar uber direto até o hotel é a melhor decisão. Conforto total.',
+     chips:[{t:'🚗 Uber / Bolt / Taxi'},{dur:'~40–55 min (trânsito matinal)'},{t:'~€55–75'}],dur:'50 min',tk:null,
+     sv:{lat:48.869,lng:2.307},stars:null,hours:null,
+     info:'No CDG: sair pelo terminal e seguir placas "Taxis" ou abrir Uber/Bolt no celular (funciona bem no CDG). Uber costuma ser €10–15 mais barato que táxi oficial. O carro para direto na porta do hotel com as malas — muito mais prático do que RER + metro com bagagem pesada.',
+     gmaps:'https://maps.google.com/maps/dir/CDG+Airport+Paris/Hotel+Le+Colisee+6+Rue+du+Colisee+Paris'},
+    {time:'09:10',cat:'hotel',icon:'🏨',title:'Chegada ao Le Colisée — deixar malas',
+     desc:'O quarto só fica disponível às 14h. Mas você pode deixar as malas na recepção gratuitamente e já sair leve!',
+     chips:[{t:'⚠️ Check-in: 14h'},{t:'Guardar malas: gratuito'},{t:'Pedir mapa do bairro'}],dur:null,tk:null,
+     sv:{lat:48.8694,lng:2.3073},stars:null,hours:'Check-in 14h · Guarda-volumes gratuito',
+     info:'Diga na recepção: "Pouvez-vous garder mes bagages?" Eles guardam de graça. Aproveite para trocar de roupa no banheiro do lobby se necessário. Pegue o mapa do hotel e peça recomendações de café próximo.',
+     gmaps:'https://maps.google.com/?q=Hotel+Le+Colisee+6+Rue+du+Colisee+Paris'},
+    {time:'09:30',cat:'food',icon:'☕',title:'Café da manhã parisiense',
+     desc:'Uma brasserie nos Champs-Élysées. Café au lait + croissant + jus d\'orange. Primeira refeição em Paris!',
+     chips:[{walk:'🚶 5 min a pé · Champs-Élysées'}],dur:'40 min',tk:null,
+     sv:{lat:48.8697,lng:2.308},stars:'★★★★☆',hours:'Brasseries abrem às 7h',
+     info:'Peça "un café allongé et un croissant, s\'il vous plaît." O café parisiense vem pequeno — se quiser maior, peça "allongé". Aproveite para observar o movimento dos Champs de manhã, bem diferente da tarde.',
+     gmaps:'https://maps.google.com/?q=brasserie+Champs+Elysées+Paris'},
+    {time:'10:00',cat:'main',icon:'🏛',title:'Arco do Triunfo',
+     desc:'7 minutos a pé do hotel. Subir ao topo: 284 degraus ou elevador. Vista 360° dos 12 bulevares.',
+     chips:[{walk:'🚶 7 min a pé'}],dur:'1h30',tk:{txt:'~€16',ok:false},
+     sv:{lat:48.8738,lng:2.295},stars:'★★★★★',hours:'10h–23h todos os dias',
+     info:'Comprar bilhete online evita fila. No topo: foto obrigatória olhando para os Champs-Élysées. À tarde terá mais gente — ir agora vale muito. Às 18h30 há cerimônia na Tumba do Soldado Desconhecido (gratuita, do lado de fora).',
+     gmaps:'https://maps.google.com/?q=Arc+de+Triomphe+Paris'},
+    {time:'11:30',cat:'shop',icon:'🛍',title:'Guerlain + Pharmacie dos Champs',
+     desc:'Guerlain nº68 (1828) para perfumes exclusivos. Pharmacie nº84 para cosméticos até 40% mais baratos que no Brasil.',
+     chips:[{walk:'🚶 a pé nos Champs'}],dur:'1h',tk:null,
+     sv:{lat:48.8697,lng:2.308},stars:'★★★★★',hours:'Guerlain 10h–20h · Farm. 9h–22h',
+     info:'Guerlain: peça para personalizar frasco da Torre Eiffel gravado (€8 extra). Pharmacie: levar lista do que quer — Bioderma, La Roche-Posay, Avène, Caudalie são bem mais baratos. A farmácia aceita cartão.',
+     gmaps:'https://maps.google.com/?q=Guerlain+68+Champs+Elysées+Paris'},
+    {time:'12:30',cat:'food',icon:'🍽',title:'Almoço nos Champs-Élysées',
+     desc:'Restaurante ou brasserie. Bom momento para sentar, descansar os pés e processar a chegada.',
+     chips:[{walk:'🚶 área dos Champs'}],dur:'1h',tk:null,
+     sv:{lat:48.8697,lng:2.307},stars:'★★★★☆',hours:'Almoço 12h–14h30',
+     info:'Dica: evite os restaurantes na beira dos Champs (caros e turísticos). Vire para as ruas laterais — Avenue de Marigny ou Rue du Colisée têm opções melhores.',
+     gmaps:'https://maps.google.com/?q=restaurant+near+Champs+Elysées+Paris'},
+    {time:'14:00',cat:'hotel',icon:'🔑',title:'Check-in no quarto — 14h',
+     desc:'Voltar ao hotel, fazer check-in, deixar malas no quarto, tomar banho e recuperar as energias.',
+     chips:[{walk:'🚶 5 min do almoço'}],dur:'45 min',tk:null,
+     sv:{lat:48.8694,lng:2.3073},stars:null,hours:'Check-in a partir das 14h',
+     info:'Aproveite para carregar o celular, trocar de roupa e fazer uma pausa. Você acordou cedo para o voo — um descanso de 30 minutos vai fazer diferença para a tarde.',
+     gmaps:'https://maps.google.com/?q=Hotel+Le+Colisee+Paris'},
+    {time:'15:00',cat:'main',icon:'🗼',title:'Torre Eiffel + Trocadéro',
+     desc:'Metro L9 até Trocadéro. Ver a Torre de baixo e a partir dos jardins do Trocadéro — a melhor vista.',
+     chips:[{metro:'9',dest:'Franklin D. Roosevelt → Trocadéro'},{dur:'3 paradas · 7 min'}],dur:'2h',tk:{txt:'~€29 — ver de baixo é grátis!',ok:false},
+     sv:{lat:48.8584,lng:2.2945},stars:'★★★★★',hours:'⚠️ Fecha 16h por calor! Ir cedo!',
+     info:'Subir não é obrigatório — ver de baixo, do Trocadéro e do Champ de Mars é igualmente espetacular. 📺 EMILY IN PARIS: a cena de abertura da série foi gravada exatamente aqui no Trocadéro — Emily aparece olhando para a Torre com aquela expressão de "não acredito que estou em Paris". O Champ de Mars ao entardecer é ótimo para sentar na grama.',
+     gmaps:'https://maps.google.com/?q=Eiffel+Tower+Paris'},
+    {time:'17:00',cat:'walk',icon:'🌿',title:'Champ de Mars ao entardecer',
+     desc:'O parque aos pés da Torre Eiffel. Sentar na grama, observar Paris ao fim do dia. Momento perfeito.',
+     chips:[{walk:'🚶 a pé da Torre'}],dur:'1h',tk:null,
+     sv:{lat:48.8556,lng:2.2986},stars:'★★★★★',hours:'Sempre aberto · Gratuito',
+     info:'Em julho o sol se põe às 22h — não há pressa. Muitos parisienses fazem piquenique aqui ao entardecer. Um quiosque vende cerveja e bebidas geladas.',
+     gmaps:'https://maps.google.com/?q=Champ+de+Mars+Paris'},
+    {time:'20:00',cat:'food',icon:'🍷',title:'Jantar em Saint-Germain',
+     desc:'Metro L9 duas paradas até Solférino. Bulevar histórico, restaurantes excelentes, iluminado à noite.',
+     chips:[{metro:'9',dest:'Trocadéro → Solférino'},{dur:'2 paradas · 5 min'}],dur:'1h30',tk:null,
+     sv:{lat:48.854,lng:2.3328},stars:'★★★★☆',hours:'19h–23h · Reserva recomendada',
+     info:'📺 EMILY IN PARIS: o Café de Flore (Boulevard Saint-Germain 172) é mencionado e aparece na série — fica a 2 min a pé do Les Deux Magots e foi frequentado por Sartre, Picasso e Camus. Saint-Germain é basicamente o bairro onde Emily mora espiritualmente. Côté Saint-Germain: escargot, trufa, cozinha francesa clássica. Reserve com antecedência.',
+     gmaps:'https://maps.google.com/?q=Saint-Germain-des-Prés+restaurant+Paris'},
+    {time:'22:00',cat:'night',icon:'🍸',title:'Haze Speakeasy',
+     desc:'Metro volta L9 até Charles de Gaulle-Étoile. Bar secreto perto do Arco — sem placa, toca a campainha.',
+     chips:[{metro:'9',dest:'Solférino → Ch. de Gaulle-Étoile'},{dur:'5 paradas · 10 min'}],dur:'2h',tk:null,
+     sv:{lat:48.8764,lng:2.3056},stars:'★★★★★',hours:'20h–3h · Ter–Dom',
+     info:'Procure porta discreta perto de Avenue Hoche. Reserve online (speakeasyparis.com) — lotado fins de semana. Pedir o "menu surprise" de coquetéis. Volta ao hotel a pé (7 min) ou taxi.',
+     gmaps:'https://maps.google.com/?q=Haze+Speakeasy+Paris+8'},
+  ]
+},
+{
+  idx:1,cls:'d1',badge:'01 jul',date:'01 jul · ter',
+  title:'Palais Royal · Le Marais · Solo à noite',
+  sub:'Louvre e Orsay fecham terças — roteiro adaptado',
+  hotel:'Le Colisée · 8º arr.',comp:'👤 André até 18h · 🎩 solo',
+  loc:'Le Marais · 3e/4e arr.',
+  center:{lat:48.860,lng:2.352},zoom:14,
+  svDefault:{lat:48.8638,lng:2.3368},
+  markers:[
+    {lat:48.869,lng:2.308,icon:'🏨',c:'#2563EB',label:'Le Colisée'},
+    {lat:48.8638,lng:2.3368,icon:'🌿',c:'#059669',label:'Palais Royal'},
+    {lat:48.8692,lng:2.3326,icon:'🍋',c:'#D97706',label:'Cédric Grolet Opéra'},
+    {lat:48.8559,lng:2.3611,icon:'🏘',c:'#2563EB',label:'Le Marais'},
+    {lat:48.8553,lng:2.3644,icon:'⛲',c:'#D97706',label:'Pl. des Vosges'},
+    {lat:48.8841,lng:2.3328,icon:'🎩',c:'#7C3AED',label:'Pigalle/Speakeasy'},
+  ],
+  steps:[
+    {time:'08:30',cat:'food',icon:'☕',title:'Café da manhã no bairro',
+     desc:'Boulangerie próxima ao hotel. Café + tartine beurrée. Paris começa nas padarias.',
+     chips:[{walk:'🚶 a pé · bairro'}],dur:'30 min',tk:null,
+     sv:{lat:48.869,lng:2.309},stars:'★★★★★',hours:'Boulangeries abrem 7h',
+     info:'Procure uma fila de franceses — é sinal de boulangerie boa. Peça "un café et une tartine, s\'il vous plaît." Paris em julho: bastante quente — saía cedo.',
+     gmaps:'https://maps.google.com/?q=boulangerie+Paris+8+arrondissement'},
+    {time:'09:00',cat:'metro',icon:'🚇',title:'Metro L1: Franklin D. Roosevelt → Palais Royal',
+     desc:'4 paradas diretas pela Linha 1 (a mais importante de Paris). 8 minutos.',
+     chips:[{metro:'1',dest:'F.D. Roosevelt → Palais Royal-Musée du Louvre'},{dur:'4 paradas · 8 min'}],dur:'8 min',tk:null,
+     sv:{lat:48.8638,lng:2.337},stars:null,hours:null,
+     info:'Linha 1 é a mais rápida — atravessa o centro de Paris de leste a oeste. Sair pela saída "Palais Royal côté jardin" para entrar direto no jardim.',
+     gmaps:'https://maps.google.com/maps/dir/Franklin+Roosevelt+Metro+Paris/Palais+Royal+Paris'},
+    {time:'09:15',cat:'main',icon:'🌿',title:'Palais Royal + Colunas de Buren',
+     desc:'Jardins históricos com as icônicas colunas listradas de Daniel Buren. Quase sem turistas de manhã.',
+     chips:[{walk:'🚶 entrada direta do metro'}],dur:'45 min',tk:null,
+     sv:{lat:48.8638,lng:2.3368},stars:'★★★★★',hours:'7h30–23h · Gratuito',
+     info:'As colunas de Buren (1986) são polêmicas mas adoradas. Ótimas fotos com ângulos criativos. Galerias ao redor têm lojas e restaurantes caros. Às 9h da manhã — quase vazio.',
+     gmaps:'https://maps.google.com/?q=Palais+Royal+Paris'},
+    {time:'10:00',cat:'main',icon:'🏛',title:'Louvre — pirâmide (exterior)',
+     desc:'5 minutos a pé do Palais Royal. Fecha às terças — ver a pirâmide de I.M. Pei ao sol da manhã.',
+     chips:[{walk:'🚶 5 min a pé'}],dur:'30 min',tk:null,
+     sv:{lat:48.8606,lng:2.3376},stars:'★★★★★',hours:'⚠️ FECHA ÀS TERÇAS',
+     info:'Hoje só exterior — mas a Cour Napoléon com a pirâmide ao sol da manhã é lindíssima. Você entra no dia 04/jul às 12h. Hoje é o momento para fotografar sem fila.',
+     gmaps:'https://maps.google.com/?q=Musée+du+Louvre+Paris'},
+    {time:'10:30',cat:'food',icon:'🍋',title:'Cédric Grolet Opéra — as frutas esculpidas',
+     desc:'A 8 min a pé do Louvre. Parada no comptoir (balcão) para comprar as famosas frutas esculpidas para levar. Obra de arte comestível.',
+     chips:[{walk:'🚶 8 min a pé do Louvre'},{t:'35 Av. de l’Opéra · 75002'},{dur:'20 min'}],dur:'20 min',tk:null,
+     sv:{lat:48.8692,lng:2.3326},stars:'★★★★★',hours:'Balcão: 9h–18h · Frutas esgotam rápido!',
+     info:'🍋 Cédric Grolet é considerado o melhor pâtissier do mundo (World’s Best Pastry Chef 2018). As frutas esculpidas são trompe-l’oeil perfeitos — parecem frutas reais mas são pura confeitaria. Ir direto ao comptoir (balcão externo) sem fazer fila do restaurante. Pedir especificamente as "fruits" — limão, maçã, avelã ou morango. Levar em caixinha para consumir no passeio. 💡 Dica: chegar às 10h30 garante os melhores modelos ainda disponíveis.',
+     gmaps:'https://maps.google.com/?q=Cédric+Grolet+Opéra+35+Avenue+de+l+Opéra+Paris'},
+    {time:'11:00',cat:'metro',icon:'🚇',title:'Metro L1: Louvre → Saint-Paul (Le Marais)',
+     desc:'3 paradas pela Linha 1. Descer em Saint-Paul — coração do Marais.',
+     chips:[{metro:'1',dest:'Louvre-Rivoli → Saint-Paul'},{dur:'3 paradas · 6 min'}],dur:'6 min',tk:null,
+     sv:{lat:48.8559,lng:2.3611},stars:null,hours:null,
+     info:'Na Gare du Nord (se estiver por aí) a L1 vai direto. De Châtelet, L1 direção Vincennes.',
+     gmaps:'https://maps.google.com/maps/dir/Louvre+Paris/Le+Marais+Paris'},
+    {time:'11:15',cat:'main',icon:'🏘',title:'Le Marais — explorar o bairro',
+     desc:'O bairro histórico judaico de Paris. Galerias de arte, lojas vintage, arquitetura medieval preservada.',
+     chips:[{walk:'🚶 a pé no bairro'}],dur:'1h15',tk:null,
+     sv:{lat:48.8559,lng:2.3611},stars:'★★★★★',hours:'Lojas 10h–19h',
+     info:'Roteiro: Rue des Rosiers (bairro judaico, falafels incríveis) → Rue Vieille du Temple (bares e livrarias) → Rue de Bretagne (mercado Enfants Rouges, mais antigo de Paris).',
+     gmaps:'https://maps.google.com/?q=Le+Marais+Paris'},
+    {time:'12:30',cat:'main',icon:'⛲',title:'Place des Vosges + almoço',
+     desc:'A praça mais antiga de Paris (1612) — arcadas, fontes simétricas, apartamento de Victor Hugo.',
+     chips:[{walk:'🚶 8 min dentro do Marais'}],dur:'1h30',tk:null,
+     sv:{lat:48.8553,lng:2.3644},stars:'★★★★★',hours:'Sempre aberta · Gratuita',
+     info:'Almoçar nas arcadas da praça — caro mas experiência única. Museu Victor Hugo no nº6 (gratuito). A praça é mais tranquila depois das 13h.',
+     gmaps:'https://maps.google.com/?q=Place+des+Vosges+Paris'},
+    {time:'15:00',cat:'walk',icon:'⛪',title:'Notre-Dame + Île de la Cité',
+     desc:'Metro L1 até Hôtel de Ville, depois a pé pela Île de la Cité. Notre-Dame em restauração — exterior impressionante.',
+     chips:[{metro:'1',dest:'Saint-Paul → Hôtel de Ville'},{dur:'1 parada · 2 min'},{walk:'🚶 10 min a pé'}],dur:'1h',tk:null,
+     sv:{lat:48.853,lng:2.3499},stars:'★★★★★',hours:'Interior em restauro até 2025+',
+     info:'Catedral reaberta em dezembro 2024 — verificar se interior está acessível. O exterior já vale muito. A Île de la Cité tem a Sainte-Chapelle (vitrais incríveis, €15) se quiser incluir.',
+     gmaps:'https://maps.google.com/?q=Notre-Dame+de+Paris'},
+    {time:'17:00',cat:'food',icon:'☕',title:'Les Deux Magots — Saint-Germain',
+     desc:'O café histórico de Sartre, Beauvoir e Hemingway desde 1885. Chocolat chaud obrigatório.',
+     chips:[{metro:'4',dest:'Cité → Saint-Germain-des-Prés'},{dur:'2 paradas · 5 min'}],dur:'45 min',tk:null,
+     sv:{lat:48.854,lng:2.3328},stars:'★★★★☆',hours:'7h30–1h todos os dias',
+     info:'Caro — um chocolat chaud custa ~€8. Mas a experiência histórica vale. Observar o movimento da praça. Após isso, André vai ao show às 18h e você é livre!',
+     gmaps:'https://maps.google.com/?q=Les+Deux+Magots+Paris'},
+    {time:'18:00',cat:'night',icon:'⭐',title:'André vai ao show — você é livre!',
+     desc:'Apéro num bar de vinho no Marais. Jantar solo num bistrô. Bares animados até tarde.',
+     chips:[{metro:'4',dest:'Saint-Germain → Saint-Paul (L1)'}],dur:'até tarde',tk:null,
+     sv:{lat:48.8596,lng:2.3618},stars:null,hours:'Bares Marais até 2h',
+     info:'La Perle (Rue de la Perle) — mais descontraído, frequentado por parisienses. Candelaria — cocktail bar com fachada de taqueria mexicana, Rue de Saintonge. Gratuito entrar.',
+     gmaps:'https://maps.google.com/?q=La+Perle+Bar+Marais+Paris'},
+    {time:'23:00',cat:'night',icon:'🎩',title:'No Entry Speakeasy — Pigalle',
+     desc:'Metro L9 até Pigalle. Escondido abaixo do Pink Mamma. Entrada secreta — o melhor speakeasy de Paris.',
+     chips:[{metro:'9',dest:'Saint-Paul (L1→L9) → Pigalle'},{dur:'~12 min'}],dur:'até 3h',tk:null,
+     sv:{lat:48.8841,lng:2.3328},stars:'★★★★★',hours:'21h–4h · Sex e Sáb',
+     info:'Subir ao Pink Mamma, procurar a entrada secreta no fundo. Dress code casual elegante. Coquetéis autorais. Volta ao hotel: taxi (~€12) ou uber.',
+     gmaps:'https://maps.google.com/?q=Pink+Mamma+Paris+Pigalle'},
+  ]
+},
+{
+  idx:2,cls:'d2',badge:'02 jul',date:'02 jul · qua',
+  title:'Versalhes (manhã) · Montmartre · Le Speakeasy',
+  sub:'Ingresso 11h ✅ Comprado · RER C saída 08h30',
+  hotel:'Le Colisée · 8º arr.',comp:'👤 André',
+  loc:'Versalhes / Montmartre',
+  center:{lat:48.880,lng:2.340},zoom:11,
+  svDefault:{lat:48.8049,lng:2.1204},
+  markers:[
+    {lat:48.8049,lng:2.1204,icon:'🏰',c:'#D97706',label:'Versalhes'},
+    {lat:48.8866,lng:2.3431,icon:'⛪',c:'#2563EB',label:'Sacré-Cœur'},
+  ],
+  steps:[
+    {time:'07:30',cat:'food',icon:'☕',title:'Café rápido + partida',
+     desc:'Café da manhã rápido no hotel ou padaria próxima. Hoje é dia longo — sair cedo é essencial.',
+     chips:[{walk:'🚶 bairro'}],dur:'30 min',tk:null,sv:{lat:48.869,lng:2.308},stars:null,hours:null,
+     info:'Levar garrafa d\'água e protetor solar. Versalhes em julho com calor intenso — chapéu ajuda muito.',
+     gmaps:'https://maps.google.com/?q=padaria+Paris+8'},
+    {time:'08:00',cat:'metro',icon:'🚇',title:'Metro L9 → RER C: partida para Versalhes',
+     desc:'Metro até a estação Invalides (L13) ou Champ de Mars-Tour Eiffel, depois RER C.',
+     chips:[{metro:'9',dest:'F.D. Roosevelt → Invalides (trocar L13)'},{rer:'C',dest:'Invalides → Versailles-Château'},{dur:'~55 min total · €7'}],dur:'55 min',tk:null,
+     sv:{lat:48.8070,lng:2.135},stars:null,hours:null,
+     info:'Da estação Invalides (RER C) sair para Versailles-Château Rive-Gauche. 35 minutos de trem. Bilhete de volta comprado na mesma máquina. Sentar à esquerda para ver os jardins na chegada.',
+     gmaps:'https://maps.google.com/maps/dir/Paris+Invalides+RER/Versailles+Chateau'},
+    {time:'09:30',cat:'walk',icon:'🌿',title:'Chegada em Versalhes — explorar o entorno',
+     desc:'Chegar 1h30 antes do ingresso. Caminhar pela cidade de Versalhes, ver a fachada do palácio e jardins externos.',
+     chips:[{walk:'🚶 da estação até o palácio: 10 min a pé'}],dur:'1h30',tk:null,
+     sv:{lat:48.8049,lng:2.1204},stars:null,hours:null,
+     info:'A fachada do palácio já impressiona antes de entrar. Ver o Grand Canal de fora. Há cafés e banheiros na entrada — usar antes de entrar.',
+     gmaps:'https://maps.google.com/?q=Palace+of+Versailles'},
+    {time:'11:00',cat:'ticket',icon:'🏰',title:'Palácio de Versalhes — Galeria dos Espelhos',
+     desc:'Ingresso 11h ✅ Comprado. Galeria dos Espelhos → Grandes Apartamentos → Capelinha Real.',
+     chips:[],dur:'2h',tk:{txt:'✅ €21 confirmado 11h',ok:true},
+     sv:{lat:48.8049,lng:2.1204},stars:'★★★★★',hours:'9h–18h30 · Seg fechado',
+     info:'Entrar pela Entrance A (bilhetes). App oficial do Château tem mapa e audioguia gratuito em português. Não perca: teto pintado por Le Brun na Galeria dos Espelhos, Apartamento do Rei, e a Grande Capelinha.',
+     gmaps:'https://maps.google.com/?q=Palace+of+Versailles+interior'},
+    {time:'13:00',cat:'walk',icon:'🌿',title:'Jardins de Versalhes',
+     desc:'800 hectares após o palácio. Fontes barrocas, Grand Canal, bosques geométricos.',
+     chips:[{walk:'🚶 dentro do complexo'},{t:'🚲 bicicleta €7'},{t:'🛶 barco no canal €16'}],dur:'2h',tk:null,
+     sv:{lat:48.8068,lng:2.111},stars:'★★★★★',hours:'Abertos 8h · Incluído no ingresso',
+     info:'Fontes musicais (Grandes Eaux) nos fins de semana — valor extra €10 mas vale muito. Alugar bicicleta no Grand Canal para cobrir mais área. Em julho: muito sol — buscar sombra.',
+     gmaps:'https://maps.google.com/?q=Gardens+of+Versailles'},
+    {time:'15:00',cat:'metro',icon:'🚆',title:'RER C: Versalhes → Paris Invalides',
+     desc:'Volta para Paris. 35 minutos de RER. Bom momento para recarregar o celular e descansar.',
+     chips:[{rer:'C',dest:'Versailles-Château → Paris Invalides'},{dur:'35 min'}],dur:'35 min',tk:null,
+     sv:{lat:48.869,lng:2.308},stars:null,hours:null,
+     info:'Da estação Invalides, caminhar ou tomar metro até o hotel para uma pausa rápida antes de Montmartre.',
+     gmaps:'https://maps.google.com/maps/dir/Versailles+Chateau+RER/Paris+Invalides'},
+    {time:'16:00',cat:'metro',icon:'🚇',title:'Metro L9 → Pigalle: subir a Montmartre',
+     desc:'Metro L9 até Pigalle. Depois subir a pé ou de funicular (gratuito com bilhete metro).',
+     chips:[{metro:'9',dest:'La Tour-Maubourg → Pigalle'},{dur:'8 paradas · 15 min'},{t:'⬆️ Funicular grátis com bilhete'}],dur:'20 min',tk:null,
+     sv:{lat:48.8866,lng:2.3431},stars:null,hours:null,
+     info:'Funicular sobe do Bd. de Rochechouart até o Sacré-Cœur — mesmo bilhete do metro. Evita a subida a pé de 220 degraus. Ambos são válidos.',
+     gmaps:'https://maps.google.com/maps/dir/Pigalle+Metro+Paris/Sacre+Coeur+Paris'},
+    {time:'16:30',cat:'main',icon:'⛪',title:'Montmartre + Sacré-Cœur',
+     desc:'Bairro dos artistas, a Praça Tertre com pintores ao vivo, vista de Paris ao entardecer.',
+     chips:[{walk:'🚶 a pé em Montmartre'}],dur:'1h',tk:null,
+     sv:{lat:48.8866,lng:2.3431},stars:'★★★★★',hours:'Basílica 6h–22h30',
+     info:'🎬 AMÉLIE POULAIN: Montmartre é o cenário inteiro do filme. A Praça du Tertre aparece várias vezes. O Moulin Rouge fica no sopé da colina. O famoso gnomo viajante do pai de Amélie é inspirado na cultura local. 📺 EMILY IN PARIS: cenas do apartamento de Emily foram gravadas aqui em Montmartre — a escadaria da Rue Lepic especificamente. Praça du Tertre: cuidado com artistas que oferecem retratos "grátis" e depois cobram.',
+     gmaps:'https://maps.google.com/?q=Sacré-Cœur+Paris'},
+    {time:'17:30',cat:'shop',icon:'🌺',title:'Fragonard — tour gratuito',
+     desc:'Perfumaria histórica com tour de 30 min pela fábrica. 5 minutos a pé em Montmartre.',
+     chips:[{walk:'🚶 5 min'},{t:'Tour gratuito'}],dur:'40 min',tk:null,
+     sv:{lat:48.8867,lng:2.3367},stars:'★★★★☆',hours:'9h–18h · Seg–Sáb',
+     info:'Tour gratuito sem agendamento. Bom para souvenirs com preços razoáveis. Melhor que as lojas de lembranças baratas da Place du Tertre.',
+     gmaps:'https://maps.google.com/?q=Fragonard+Parfumeur+Montmartre'},
+    {time:'18:30',cat:'hotel',icon:'🚿',title:'Retorno ao hotel — banho e troca',
+     desc:'Depois de um dia inteiro em Versalhes e Montmartre com sol forte, voltar ao hotel para banho e roupa limpa antes do jantar.',
+     chips:[{metro:'9',dest:'Pigalle → Franklin D. Roosevelt'},{dur:'5 paradas · 10 min'}],dur:'45 min',tk:null,
+     sv:{lat:48.8694,lng:2.3073},stars:null,hours:null,
+     info:'Você passou o dia inteiro ao sol em Versalhes e subindo Montmartre. Um banho rápido e roupa limpa transformam o final do dia. Vale muito a pena antes do jantar e do show.',
+     gmaps:'https://maps.google.com/?q=Hotel+Le+Colisee+Paris+8'},
+    {time:'19:30',cat:'food',icon:'🍽',title:'Jantar em Montmartre',
+     desc:'Restaurante local — muito mais autêntico e barato que o centro turístico.',
+     chips:[{metro:'9',dest:'Franklin D. Roosevelt → Pigalle'},{dur:'5 paradas · 10 min'}],dur:'1h30',tk:null,
+     sv:{lat:48.887,lng:2.338},stars:'★★★★☆',hours:'19h–22h30',
+     info:'Dica de ouro: Rue Lepic e Rue des Abbesses — restaurantes frequentados por moradores, não por turistas. O Café des 2 Moulins na Rue Lepic é o bar onde Amélie Poulain trabalhava no filme! Peça um prato do dia (plat du jour).',
+     gmaps:'https://maps.google.com/?q=restaurant+Montmartre+Paris'},
+    {time:'21:30',cat:'night',icon:'🎹',title:'Le Speakeasy Paris',
+     desc:'Piano ao vivo, cantores, dança. Show completo que vai até 5h da manhã.',
+     chips:[{walk:'🚶 a pé em Montmartre'}],dur:'até 3h',tk:null,
+     sv:{lat:48.886,lng:2.338},stars:'★★★★★',hours:'20h–5h · Qui–Dom',
+     info:'Ambiente elegante — dress code. Piano bar na entrada, pista de dança ao fundo. Especialidade em jazz e chanson française. Coquetéis autorais.',
+     gmaps:'https://maps.google.com/?q=Le+Speakeasy+Paris+Montmartre'},
+  ]
+},
+{
+  idx:3,cls:'d3',badge:'03 jul',date:'03 jul · qui',
+  title:'Troca de hotel · Galeries Lafayette · Orsay',
+  sub:'Check-out Le Colisée → Check-in Ibis Cambronne · Karine chega 14h',
+  hotel:'Ibis Cambronne · 2 Rue Cambronne · 15º arr.',comp:'👩 Karine chega 14h',
+  loc:'15º arr. · Ibis Cambronne',
+  center:{lat:48.852,lng:2.305},zoom:13,
+  svDefault:{lat:48.860,lng:2.3266},
+  markers:[
+    {lat:48.869,lng:2.308,icon:'🏨',c:'#94A3B8',label:'Le Colisée (saída)'},
+    {lat:48.846,lng:2.301,icon:'🏨',c:'#059669',label:'Ibis Cambronne (entrada)'},
+    {lat:48.860,lng:2.3266,icon:'🎨',c:'#D97706',label:"Orsay"},
+    {lat:48.8536,lng:2.2894,icon:'🌉',c:'#2563EB',label:'Bir-Hakeim'},
+  ],
+  steps:[
+    {time:'08:30',cat:'hotel',icon:'🏨',title:'Check-out Le Colisée',
+     desc:'Fazer check-out, guardar malas pesadas na recepção. Você vai buscar no final do dia — ou levar direto ao Ibis.',
+     chips:[{t:'📦 Malas guardadas na recepção'},{t:'Ou levar tudo no metro'}],dur:'30 min',tk:null,
+     sv:{lat:48.8694,lng:2.3073},stars:null,hours:'Check-out até 12h',
+     info:'Se quiser levar as malas direto ao Ibis Cambronne: metro L9 até La Tour-Maubourg, depois L10 ou L13 até Cambronne (10 min). Hotel pode guardar as malas até o check-in.',
+     gmaps:'https://maps.google.com/?q=Hotel+Le+Colisee+Paris+8'},
+    {time:'09:00',cat:'food',icon:'☕',title:'Café da manhã + passeio final no 8º arr.',
+     desc:'Último café no bairro elegante. Caminhar pelos Champs pela última vez desta estadia.',
+     chips:[{walk:'🚶 bairro'}],dur:'45 min',tk:null,
+     sv:{lat:48.8697,lng:2.308},stars:null,hours:null,
+     info:'Aproveitar para comprar qualquer item esquecido na Pharmacie dos Champs ou Guerlain.',
+     gmaps:'https://maps.google.com/?q=Champs+Elysées+Paris'},
+    {time:'09:45',cat:'metro',icon:'🚇',title:'Metro L9 → Galeries Lafayette',
+     desc:'3 paradas até Chaussée d\'Antin-La Fayette. Ir às Galeries antes de trocar de hotel.',
+     chips:[{metro:'9',dest:'F.D. Roosevelt → Chaussée d\'Antin-La Fayette'},{dur:'3 paradas · 7 min'}],dur:'7 min',tk:null,
+     sv:{lat:48.8731,lng:2.3385},stars:null,hours:null,
+     info:'Manhã cedo nas Galeries = menos gente, melhor experiência.',
+     gmaps:'https://maps.google.com/maps/dir/Champs+Elysees/Galeries+Lafayette+Paris'},
+    {time:'10:00',cat:'shop',icon:'🛍',title:'Galeries Lafayette — cúpula art nouveau',
+     desc:'A cúpula art nouveau do século XIX vale a visita sozinha. Terrasse gratuita no 7º andar: vista incrível.',
+     chips:[{t:'Entrada gratuita'},{t:'🏙 Terrasse no 7º andar'}],dur:'1h30',tk:null,
+     sv:{lat:48.8731,lng:2.3385},stars:'★★★★★',hours:'9h30–21h30 · Dom 11h–20h',
+     info:'Terrasse: subir pelo elevador principal, sinalização no 7º andar. Vista de 360° de Paris sem pagar nada. Andar -1: La Grande Épicerie (supermercado gourmet).',
+     gmaps:'https://maps.google.com/?q=Galeries+Lafayette+Haussmann+Paris'},
+    {time:'11:30',cat:'metro',icon:'🚇',title:'Metro: Galeries → Ibis Cambronne',
+     desc:'Ir até o novo hotel com as malas. Check-in, deixar bagagem, preparar para Karine chegar.',
+     chips:[{metro:'9',dest:'Chaussée d\'Antin → La Tour-Maubourg'},{t:'+ L8 ou taxi até Cambronne'},{dur:'~18 min'}],dur:'20 min',tk:null,
+     sv:{lat:48.8454,lng:2.3011},stars:null,hours:null,
+     info:'Ibis Cambronne: 2 Rue Cambronne, 75015. Check-in às 14h mas podem guardar malas. A partir daqui, Torre Eiffel a 10 min a pé!',
+     gmaps:'https://maps.google.com/?q=Ibis+Paris+Cambronne+2+Rue+Cambronne'},
+    {time:'12:00',cat:'food',icon:'🍽',title:'Almoço no 15º arrondissement',
+     desc:'Bairro residencial com ótimos restaurantes locais. Antes de Karine chegar.',
+     chips:[{walk:'🚶 bairro Cambronne'}],dur:'1h',tk:null,
+     sv:{lat:48.846,lng:2.303},stars:'★★★★☆',hours:'12h–14h30',
+     info:'Rue du Commerce (10 min a pé) tem excelentes opções. Mais barato e autêntico que o 8º.',
+     gmaps:'https://maps.google.com/?q=restaurant+15+arrondissement+Paris'},
+    {time:'14:00',cat:'hotel',icon:'🎉',title:'Karine chega de Lisboa!',
+     desc:'Karine aterra em CDG, toma o RER B (25 min) + metro. Encontro no Ibis Cambronne.',
+     chips:[{t:'✈️ Lisboa → CDG'},{rer:'B',dest:'CDG → Gare du Nord'},{metro:'6',dest:'→ Cambronne'}],dur:'~1h transfer',tk:null,
+     sv:{lat:48.8454,lng:2.3011},stars:null,hours:null,
+     info:'Enviar para Karine: "RER B do CDG até Gare du Nord (25 min), depois Metro L4 sul até Montparnasse-Bienvenüe, depois L6 até Cambronne." O hotel fica a 200m da estação.',
+     gmaps:'https://maps.google.com/?q=Ibis+Cambronne+Paris+15'},
+    {time:'14:30',cat:'metro',icon:'🚇',title:'A pé até o Musée d\'Orsay',
+     desc:'15 minutos a pé do Ibis até o Orsay — às margens do Sena. Uma das caminhadas mais bonitas de Paris.',
+     chips:[{walk:'🚶 15 min a pé'},{t:'Seguir o Sena à esquerda'}],dur:'15 min',tk:null,
+     sv:{lat:48.860,lng:2.3266},stars:null,hours:null,
+     info:'Caminhar pela Rue de la Convention → Rue du Général Bertrand → orla do Sena → Orsay. Ver a Torre Eiffel ao fundo durante a caminhada.',
+     gmaps:'https://maps.google.com/maps/dir/Ibis+Cambronne+Paris/Musée+d+Orsay'},
+    {time:'14:45',cat:'ticket',icon:'🎨',title:"Musée d’Orsay — Van Gogh, Monet ✅",
+     desc:'Maior coleção impressionista do mundo. Estação de trem reconvertida em museu em 1986.',
+     chips:[{t:'🚶 15 min do hotel!'}],dur:'2h',tk:{txt:'✅ Orsay confirmado',ok:true},
+     sv:{lat:48.860,lng:2.3266},stars:'★★★★★',hours:'9h30–18h · Fecha Seg · Qui até 21h45',
+     info:'Destaques: A Noite Estrelada de Van Gogh (nível 5), Ninfeas de Monet, Bailarinas de Degas, Moulin de la Galette de Renoir. Quinta à noite com menos pessoas.',
+     gmaps:'https://maps.google.com/?q=Musée+d+Orsay+Paris'},
+    {time:'17:00',cat:'walk',icon:'🌉',title:'Pont de Bir-Hakeim',
+     desc:'8 minutos a pé do Ibis. A ponte mais cinematográfica de Paris — usada por Christopher Nolan em Inception (2010).',
+     chips:[{walk:'🚶 8 min do hotel'}],dur:'40 min',tk:null,
+     sv:{lat:48.8536,lng:2.2894},stars:'★★★★★',hours:'Sempre aberta · Gratuita',
+     info:'🎬 NOLAN (Inception, 2010): Esta é a ponte onde Dom Cobb (Leonardo DiCaprio) caminha com Ariadne (Ellen Page) enquanto o mundo se dobra ao redor deles. Nolan escolheu Paris por essa arquitetura art nouveau única. 📺 EMILY IN PARIS: a ponte também aparece na série — Emily atravessa ela a pé várias vezes no caminho para o 16º arrondissement. A plataforma inferior dá a vista dupla mais icônica: Torre Eiffel acima + metrô aéreo L6 passando. O metrô passa a cada 4 min — aguarde para a foto perfeita.',
+     gmaps:'https://maps.google.com/?q=Pont+de+Bir-Hakeim+Paris'},
+    {time:'17:45',cat:'walk',icon:'🗼',title:'Champ de Mars ao entardecer com Karine',
+     desc:'Caminhar até o Champ de Mars — jardim aos pés da Torre Eiffel. Sentar na grama e apreciar Paris juntos.',
+     chips:[{walk:'🚶 8 min a pé da ponte'}],dur:'45 min',tk:null,
+     sv:{lat:48.8556,lng:2.2986},stars:'★★★★★',hours:'Sempre aberto · Gratuito',
+     info:'O Champ de Mars é um dos melhores spots de Paris para simplesmente sentar e existir. Em julho o sol se põe às 22h — a Torre começa a piscar a cada hora em ponto. Levar algo para beber de um quiosque próximo.',
+     gmaps:'https://maps.google.com/?q=Champ+de+Mars+Paris'},
+    {time:'19:00',cat:'hotel',icon:'🚿',title:'Hotel — banho e troca para o jantar',
+     desc:'Voltar ao Ibis Cambronne para banho rápido antes do jantar em família.',
+     chips:[{walk:'🚶 10 min a pé do Champ de Mars'}],dur:'45 min',tk:null,
+     sv:{lat:48.8454,lng:2.3011},stars:null,hours:null,
+     info:'Karine e você trocam de roupa para o jantar. Primeiro dia juntos em Paris — merece uma refeição especial.',
+     gmaps:'https://maps.google.com/?q=Ibis+Paris+Cambronne'},
+    {time:'20:00',cat:'food',icon:'🍽',title:'Jantar em família — primeiro com Karine',
+     desc:'Restaurante no 7º ou 15º arrondissement. Primeiro jantar com a irmã em Paris — escolha um lugar especial.',
+     chips:[{walk:'🚶 bairro · Rue du Commerce ou orla do Sena'}],dur:'2h',tk:null,
+     sv:{lat:48.8530,lng:2.2940},stars:'★★★★☆',hours:'19h30–23h',
+     info:'Sugestão: Le Troquet (Rue François Bonvin, 15º) — bistrô elegante frequentado por parisienses, excelente cozinha francesa, preço justo. Ou L’Ami Jean (Rue Malar, 7º) — famoso pelo arroz com leite de sobremesa. Reserve com antecedência.',
+     gmaps:'https://maps.google.com/?q=restaurant+7+arrondissement+Paris'},
+    {time:'22:00',cat:'walk',icon:'🌙',title:'Caminhada noturna por Paris com Karine',
+     desc:'Paris à noite é uma cidade completamente diferente. Caminhar pela orla do Sena iluminada, ver as pontes e os monumentos acesos.',
+     chips:[{walk:'🚶 orla do Sena · Pont d\u2019Iéna → Pont Alexandre III'}],dur:'1h',tk:null,
+     sv:{lat:48.8563,lng:2.2990},stars:'★★★★★',hours:'Sempre aberta · Gratuito',
+     info:'A Torre Eiffel pisca por 5 minutos a cada hora em ponto até meia-noite. Caminhar pela margem do Sena à noite com Paris iluminada é uma das experiências mais belas que a cidade oferece — e é completamente gratuito. Ideal para fotos noturnas da Torre.',
+     gmaps:'https://maps.google.com/?q=Pont+d+Iena+Paris'},
+  ]
+},
+{
+  idx:4,cls:'d4',badge:'04 jul',date:'04 jul · sex',
+  title:'Orangerie 9h · Louvre 12h · Pont Alexandre III',
+  sub:'Dia dos grandes museus · Ambos com ingresso',
+  hotel:'Ibis Cambronne · 15º arr.',comp:'👩 Com Karine',
+  loc:'Tuileries · 1er arr.',
+  center:{lat:48.862,lng:2.330},zoom:14,
+  svDefault:{lat:48.8637,lng:2.3236},
+  markers:[
+    {lat:48.8637,lng:2.3236,icon:'🌸',c:'#DB2777',label:'Orangerie 9h'},
+    {lat:48.8606,lng:2.3376,icon:'🎨',c:'#D97706',label:'Louvre 12h'},
+    {lat:48.8631,lng:2.3131,icon:'🌉',c:'#2563EB',label:'Pont Alexandre III'},
+    {lat:48.8513,lng:2.3202,icon:'🛍',c:'#DB2777',label:'Le Bon Marché'},
+    {lat:48.8632,lng:2.3016,icon:'🚢',c:'#0369A1',label:'Bateaux Mouches · Pont de l’Alma'},
+  ],
+  steps:[
+    {time:'07:45',cat:'food',icon:'☕',title:'Café da manhã',
+     desc:'Boulangerie no bairro Cambronne. Sair cedo — Orangerie às 9h.',
+     chips:[{walk:'🚶 bairro'}],dur:'30 min',tk:null,sv:{lat:48.846,lng:2.302},stars:null,hours:null,
+     info:'Rue du Commerce tem excelentes boulangeries. Levar bilhete de metro carregado.',
+     gmaps:'https://maps.google.com/?q=boulangerie+Cambronne+Paris'},
+    {time:'08:20',cat:'metro',icon:'🚇',title:'Metro L6 → L1: Cambronne → Tuileries',
+     desc:'Metro L6 até Invalides (4 paradas), trocar para L13 ou RER C até Tuileries. Alternativa: taxi ~€10.',
+     chips:[{metro:'6',dest:'Cambronne → Invalides'},{metro:'1',dest:'Invalides (trocar) → Tuileries'},{dur:'~16 min total'}],dur:'16 min',tk:null,
+     sv:{lat:48.8637,lng:2.3236},stars:null,hours:null,
+     info:'Atenção: às 9h o Orangerie abre. Chegar 10 min antes para pegar posição. Saída do metro "Tuileries" fica em frente ao jardim.',
+     gmaps:'https://maps.google.com/maps/dir/Cambronne+Metro/Orangerie+Paris'},
+    {time:'09:00',cat:'main',icon:'🌸',title:'Orangerie — Ninfeas de Monet',
+     desc:'Os 8 painéis das Ninfeas em salas ovais projetadas pelo próprio Monet em 1927. Experiência única.',
+     chips:[],dur:'1h30',tk:{txt:'~€12 · Reserve 9h!',ok:false},
+     sv:{lat:48.8637,lng:2.3236},stars:'★★★★★',hours:'9h–18h · Fecha Ter · Última entrada 17h15',
+     info:'Chegar na abertura (9h) — salas estão vazias e a luz da manhã nas Ninfeas é excepcional. Andar inferior: coleção Walter-Guillaume com Picasso, Matisse, Cézanne, Renoir.',
+     gmaps:'https://maps.google.com/?q=Musée+de+l+Orangerie+Paris'},
+    {time:'10:30',cat:'walk',icon:'🌿',title:'Jardim das Tulherias → Louvre a pé',
+     desc:'Caminhar 1.2km pelo jardim histórico até a pirâmide do Louvre. A melhor rota do centro de Paris.',
+     chips:[{walk:'🚶 1.2km · 15 min a pé'}],dur:'15 min',tk:null,
+     sv:{lat:48.8637,lng:2.3302},stars:'★★★★★',hours:'7h–23h · Gratuito',
+     info:'Jardim criado em 1564 para Catarina de Médicis. Em julho há roda-gigante e parque temporário. Parar para fotos da pirâmide do Louvre ao fundo antes de entrar.',
+     gmaps:'https://maps.google.com/?q=Jardins+des+Tuileries+Paris'},
+    {time:'10:45',cat:'food',icon:'🥐',title:'Café nos Tuileries antes do Louvre',
+     desc:'Café rápido no jardim. Você entra no Louvre às 12h — aproveitar para respirar e sentar.',
+     chips:[{walk:'🚶 jardim das Tulherias'}],dur:'45 min',tk:null,
+     sv:{lat:48.864,lng:2.336},stars:null,hours:null,
+     info:'Os cafés dentro do Louvre são caros e cheios. Melhor comer antes. O jardim tem quiosques com café, sucos e sanduíches. Boa hora para carregar o celular se tiver power bank.',
+     gmaps:'https://maps.google.com/?q=cafe+Jardins+Tuileries+Paris'},
+    {time:'12:00',cat:'ticket',icon:'🎨',title:'Musée du Louvre',
+     desc:'Entrar PELO METRO — evita 1h de fila na pirâmide. Mona Lisa (Sala 711), Vênus de Milo, Vitória de Samotrácia.',
+     chips:[{t:'⚠️ Entrar pela saída do Metro Palais Royal'}],dur:'3h',tk:{txt:'✅ Comprado · Entrada 12h',ok:true},
+     sv:{lat:48.8606,lng:2.3376},stars:'★★★★★',hours:'9h–18h · Fecha Ter · Qui/Sex até 21h45',
+     info:'Roteiro: 1) Vitória de Samotrácia (escadaria Daru) 2) Vênus de Milo (ala Sully) 3) Mona Lisa (sala 711, ala Denon). App do Louvre tem mapa offline. Reserve 3h mínimo.',
+     gmaps:'https://maps.google.com/?q=Musée+du+Louvre+Paris'},
+    {time:'15:00',cat:'hotel',icon:'🚿',title:'Hotel — banho rápido antes da tarde',
+     desc:'Depois de 3h no Louvre, voltar ao Ibis para banho rápido e troca de roupa. Energiza para a tarde no Sena.',
+     chips:[{metro:'6',dest:'Louvre (L1) → Cambronne (L6)'},{dur:'~18 min'}],dur:'45 min',tk:null,
+     sv:{lat:48.8454,lng:2.3011},stars:null,hours:null,
+     info:'3h no Louvre é intenso — um banho rápido e roupa fresca transforma o estado de espírito para a tarde. O Ibis fica a ~18 min de metro do Louvre.',
+     gmaps:'https://maps.google.com/?q=Ibis+Paris+Cambronne'},
+    {time:'16:00',cat:'walk',icon:'🌉',title:'Pont Alexandre III',
+     desc:'Metro até Invalides. A ponte mais ornamentada de Paris (1900) — ouros, estátuas barrocas, Grand Palais ao fundo.',
+     chips:[{metro:'6',dest:'Cambronne → La Tour-Maubourg'},{walk:'🚶 5 min a pé'}],dur:'30 min',tk:null,
+     sv:{lat:48.8631,lng:2.3131},stars:'★★★★★',hours:'Sempre aberta · Gratuita',
+     info:'Lampiões ao entardecer são cinematográficos. Foto clássica: no centro da ponte olhando para o Grand Palais/Invalides.',
+     gmaps:'https://maps.google.com/?q=Pont+Alexandre+III+Paris'},
+    {time:'16:30',cat:'shop',icon:'🛍',title:'Le Bon Marché',
+     desc:'O shopping mais antigo de Paris (1852) e o mais elegante. Perfumes, moda, La Grande Épicerie.',
+     chips:[{metro:'1',dest:'Louvre (L1) → Sèvres-Babylone (L4)'},{dur:'~10 min'}],dur:'1h30',tk:null,
+     sv:{lat:48.8513,lng:2.3202},stars:'★★★★★',hours:'10h–20h · Dom 11h–19h',
+     info:'La Grande Épicerie ao lado: o melhor supermercado gourmet de Paris. Ótimo para queijos, vinhos artesanais e produtos para levar de lembrança.',
+     gmaps:'https://maps.google.com/?q=Le+Bon+Marché+Paris'},
+    {time:'18:30',cat:'walk',icon:'🚢',title:'Passeio de barco pelo Rio Sena',
+     desc:'Bateaux Mouches ao anoitecer — 1h15 navegando sob as pontes de Paris com a luz dourada do fim do dia.',
+     chips:[{walk:'🚶 15 min a pé do Bon Marché até Pont de l’Alma'},{dur:'1h15 de barco'},{t:'~€17 adulto'}],dur:'2h',tk:{txt:'~€17 · Bateaux Mouches',ok:false},
+     sv:{lat:48.8632,lng:2.3016},stars:'★★★★★',hours:'Saídas a cada 30–45 min · Última ~22h30',
+     info:'Embarque: Pont de l’Alma, margem direita (Rive Droite). Saída das 18h30 ou 19h15 — céu ainda claro em julho, Torre Eiffel começa a piscar às 21h em ponto (5 min de luzes). O barco passa sob 37 pontes. Levar uma taça de vinho embarcado (vendem a bordo). Vista privilegiada da Notre-Dame, Louvre e Torre Eiffel pelo rio.',
+     gmaps:'https://maps.google.com/?q=Bateaux+Mouches+Pont+de+l+Alma+Paris'},
+    {time:'20:00',cat:'food',icon:'🍽',title:'Jantar na orla do Sena',
+     desc:'Após o passeio, jantar num restaurante às margens do rio. A melhor forma de encerrar o dia mais intenso.',
+     chips:[{walk:'🚶 orla do Sena · Port Debilly ou Trocadéro'}],dur:'1h30',tk:null,
+     sv:{lat:48.8632,lng:2.2986},stars:'★★★★☆',hours:'19h–23h',
+     info:'Le Café de l’Homme (Trocadéro) tem vista direta para a Torre Eiffel iluminada — caro mas memorável. Alternativa mais acessível: picnic no Champ de Mars com compras da Grande Épicerie.',
+     gmaps:'https://maps.google.com/?q=restaurant+bord+de+Seine+Paris+Trocadero'},
+  ]
+},
+{
+  idx:5,cls:'d5',badge:'05 jul',date:'05 jul · sáb',
+  title:'Manhã livre · Au revoir, Paris! · Voo para Viena',
+  sub:'Condor · CDG 16:45 → VIE 20:45 · Chegar CDG 15h',
+  hotel:'Ibis Cambronne · check-out 12h',comp:'👩 Com Karine → Viena',
+  loc:'Paris → CDG → Viena 🇦🇹',
+  center:{lat:48.870,lng:2.310},zoom:12,
+  svDefault:{lat:48.8584,lng:2.2945},
+  markers:[
+    {lat:48.846,lng:2.301,icon:'🏨',c:'#059669',label:'Ibis Cambronne'},
+    {lat:48.8584,lng:2.2945,icon:'🗼',c:'#EF4444',label:'Torre Eiffel (despedida)'},
+    {lat:49.0097,lng:2.5479,icon:'✈️',c:'#D97706',label:'CDG · Voo 16:45'},
+  ],
+  steps:[
+    {time:'08:00',cat:'food',icon:'☕',title:'Último café parisiense',
+     desc:'Boulangerie no bairro. O café que você vai sentir falta. Aproveitar com calma.',
+     chips:[{walk:'🚶 10 min do hotel · Champ de Mars'}],dur:'1h',tk:null,
+     sv:{lat:48.8584,lng:2.2945},stars:null,hours:null,
+     info:'Sentar na grama do Champ de Mars com café e croissant — Torres Eiffel ao fundo. Um dos momentos mais simples e mais bonitos de qualquer viagem a Paris.',
+     gmaps:'https://maps.google.com/?q=Champ+de+Mars+Paris'},
+    {time:'09:00',cat:'main',icon:'🗼',title:'Torre Eiffel — última visita',
+     desc:'10 minutos a pé do Ibis. Absorver Paris pela última vez — Champ de Mars, vista, momento.',
+     chips:[{walk:'🚶 10 min do hotel'}],dur:'1h',tk:null,
+     sv:{lat:48.8584,lng:2.2945},stars:'★★★★★',hours:'Ver horário por conta do calor',
+     info:'Não precisa subir — a experiência de estar lá embaixo já é excepcional. Caminhar pela orla do Sena até o Pont d\'Iéna.',
+     gmaps:'https://maps.google.com/?q=Eiffel+Tower+Paris'},
+    {time:'10:30',cat:'shop',icon:'🛍',title:'Rue de Passy — últimas compras',
+     desc:'Metro L6 até Passy (2 paradas). A rua de moda mais elegante do 16º. Último shopping parisiense.',
+     chips:[{metro:'6',dest:'Cambronne → Passy'},{dur:'2 paradas · 5 min'}],dur:'1h',tk:null,
+     sv:{lat:48.8567,lng:2.2773},stars:'★★★★☆',hours:'Lojas 10h–19h30',
+     info:'Preços mais acessíveis que os Champs. Bom para roupas, acessórios e presentes de qualidade.',
+     gmaps:'https://maps.google.com/?q=Rue+de+Passy+Paris+16'},
+    {time:'11:30',cat:'hotel',icon:'🚿',title:'Hotel — banho e preparar malas',
+     desc:'Voltar ao Ibis para banho rápido e começar a organizar as malas antes do check-out do meio-dia.',
+     chips:[{metro:'6',dest:'Passy → Cambronne'},{dur:'2 paradas · 5 min'}],dur:'30 min',tk:null,
+     sv:{lat:48.8454,lng:2.3011},stars:null,hours:null,
+     info:'Aproveitar para checar a lista de documentos: passaportes, e-tickets Viena, cartões. Deixar as malas prontas antes do check-out às 12h.',
+     gmaps:'https://maps.google.com/?q=Ibis+Paris+Cambronne'},
+    {time:'12:00',cat:'food',icon:'🍽',title:'Último almoço parisiense',
+     desc:'Brasserie simples ou crêperie. Um croque-monsieur, uma galette. Pedir um café allongé de despedida.',
+     chips:[{walk:'🚶 bairro'}],dur:'1h',tk:null,
+     sv:{lat:48.846,lng:2.303},stars:null,hours:null,
+     info:'Rue du Commerce (15º arr.) tem boas opções. Comer sem pressa — ainda tem 2h antes de ir ao aeroporto.',
+     gmaps:'https://maps.google.com/?q=brasserie+15+arrondissement+Paris'},
+    {time:'13:00',cat:'hotel',icon:'🧳',title:'Check-out + conferir documentos',
+     desc:'Checar tudo: passaportes (×2), cartões, seguro viagem, ingressos Roma/Viena, carregadores.',
+     chips:[{t:'📋 Passaporte'},{t:'💳 Cartões'},{t:'📱 E-tickets'}],dur:'30 min',tk:null,
+     sv:{lat:48.846,lng:2.301},stars:null,hours:'Check-out até 12h',
+     info:'Checklist: Passaporte Rodrigo + Karine · Cartão débito + crédito · Seguro viagem · E-tickets Viena · Ingressos Roma (Vaticano, Coliseu, Panteão) · Carregador e adaptador europeu.',
+     gmaps:'https://maps.google.com/?q=Ibis+Cambronne+Paris'},
+    {time:'13:45',cat:'metro',icon:'🚆',title:'Transfer para CDG — RER B',
+     desc:'Metro L6 até La Tour-Maubourg → RER B até CDG. 45 minutos de RER. Chegar às 15h no terminal.',
+     chips:[{metro:'6',dest:'Cambronne → Denfert-Rochereau'},{rer:'B',dest:'Denfert-Rochereau → CDG 2'},{dur:'~55 min total · €12'}],dur:'55 min',tk:null,
+     sv:{lat:49.0097,lng:2.5479},stars:null,hours:'Voo 16:45 · Terminal 2E',
+     info:'Chegar no CDG às 15h = 1h45 de antecedência. Para voos internacionais em julho (alta temporada), fila de check-in e segurança pode ser longa. Ter boarding pass no celular ajuda.',
+     gmaps:'https://maps.google.com/maps/dir/Denfert-Rochereau+Paris/CDG+Airport'},
+    {time:'16:45',cat:'hotel',icon:'✈️',title:'Voo CDG → Viena (Condor)',
+     desc:'Au revoir, Paris! Chegada em Viena às 20h45. Casa do Tio Bruno. Próxima quest: VIE → ROM → LIS → BCN → MAD.',
+     chips:[{t:'Condor · Terminal 2E'},{t:'Chegada VIE 20:45'}],dur:'2h',tk:null,
+     sv:{lat:49.0097,lng:2.5479},stars:null,hours:'Terminal 2E',
+     info:'Próximas paradas: Viena 05–08 Jul → Roma 08–12 Jul → Lisboa 12–16 Jul → Barcelona 16–19 Jul → Madrid 19–21 Jul → Recife 21 Jul.',
+     gmaps:'https://maps.google.com/?q=CDG+Airport+Terminal+2E'},
+  ]
+}
+];
+
+// ── MAPS & STATE ──────────────────────────────────────────────────────────
+let maps={},svPano=null,curDay=0,done=0,total=0,tkState={};
+
+// ── BUILD DOM ─────────────────────────────────────────────────────────────
+function chip(c){
+  if(c.metro) return `<span class="chip metro">Metro <span class="mdot m${c.metro}">${c.metro}</span> ${c.dest||''}</span>`;
+  if(c.rer) return `<span class="chip metro">RER <span class="mdot ${c.rer==='B'?'rb':'rc'}">${c.rer}</span> ${c.dest||''}</span>`;
+  if(c.walk) return `<span class="chip walk">${c.walk}</span>`;
+  if(c.dur) return `<span class="dur-chip">⏱ ${c.dur}</span>`;
+  return `<span class="chip">${c.t||''}</span>`;
+}
+
+function buildStep(d,s,si){
+  const chips = s.chips.map(chip).join('');
+  const tk = s.tk ? `<span class="tkc ${s.tk.ok?'ok':''}">${s.tk.txt}</span>` : '';
+  const stars = s.stars ? `<div class="detail-stars"><span class="stars">${s.stars}</span>${s.count?`<span class="rnum">${s.count}</span>`:''}</div>` : '';
+  const hours = s.hours ? `<span class="htag">⏰ ${s.hours}</span>` : '';
+  const info = s.info ? `<div class="dinfo">${s.info}</div>` : '';
+  const gm = s.gmaps ? `<a class="abtn" href="${s.gmaps}" target="_blank" onclick="openMaps(event,'${s.gmaps}',${s.sv?s.sv.lat+','+s.sv.lng:'0,0'})">📍 Navegar agora</a>` : '';
+  const sv = s.sv ? `<button class="abtn sv" onclick="openSV(${s.sv.lat},${s.sv.lng},'${s.title.replace(/'/g,"\\'")}')">📸 Street View</button>` : '';
+  const dotColor = {hotel:'#2563EB',metro:'#7C3AED',walk:'#059669',food:'#059669',shop:'#DB2777',night:'#7C3AED',ticket:'#D97706',warn:'#DC2626',main:'#2563EB'}[s.cat]||'#94A3B8';
+  const badgeLabel = {hotel:'hotel',metro:'metro',walk:'a pé',food:'alimentação',shop:'compras',night:'noite',ticket:'ingresso',warn:'atenção',main:'visita'}[s.cat]||s.cat;
+  return `
+<div class="tl-item">
+  <div class="tl-line"></div>
+  <div class="tl-left">
+    <div class="tl-dot" style="background:${dotColor}22;border-color:${dotColor}44;color:${dotColor}">${s.icon}</div>
+    <div class="tl-time">${s.time}</div>
+  </div>
+  <div class="tl-card c-${s.cat}" onclick="toggleS(this)" id="s${d.idx}_${si}">
+    <div class="chk" onclick="doneS(event,this)">○</div>
+    <div class="tl-body">
+      <div class="tl-top"><span class="tl-badge b-${s.cat}">${badgeLabel}</span></div>
+      <div class="tl-title">${s.title}</div>
+      <div class="tl-desc">${s.desc}</div>
+    </div>
+    ${chips||tk?`<div class="tl-meta">${chips}${tk}</div>`:''}
+    <div class="tl-detail">
+      ${stars}${hours}${info}
+      <div class="abtns">${gm}${sv}</div>
+    </div>
+  </div>
+</div>`;
+}
+
+function buildDays(){
+  const wrap=document.getElementById('days-wrap');
+  total=DAYS.reduce((s,d)=>s+d.steps.length,0);
+  DAYS.forEach(d=>{
+    const p=document.createElement('div');
+    p.className='day-panel'+(d.idx===0?' active':'');
+    p.id='day-'+d.idx;
+    p.innerHTML=`
+<div class="map-card">
+  <div class="gmap-div" id="gmap${d.idx}"></div>
+  <div class="map-you"><div class="yd"></div>Você aqui</div>
+  <button class="sv-btn" onclick="openSV(${d.svDefault.lat},${d.svDefault.lng},'${d.title.split('·')[0].trim()}')">📸 Street View</button>
+</div>
+<div class="dh ${d.cls}">
+  <div class="dh-row"><div class="dh-badge">${d.badge}</div><div class="dh-comp">${d.comp}</div></div>
+  <div class="dh-title">${d.title}</div>
+  <div class="dh-sub">${d.sub}</div>
+  <div class="hotel-tag">🏨 ${d.hotel}</div>
+</div>
+<div style="padding:10px 14px 4px;font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px">Roteiro do dia</div>
+<div class="timeline">${d.steps.map((s,si)=>buildStep(d,s,si)).join('')}</div>`;
+    wrap.appendChild(p);
+  });
+}
+
+// ── GOOGLE MAPS ───────────────────────────────────────────────────────────
+const MSTYLE=[
+  {featureType:'all',elementType:'geometry',stylers:[{saturation:-8},{lightness:4}]},
+  {featureType:'water',elementType:'geometry',stylers:[{color:'#bdd8f0'}]},
+  {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#5a8cbf'}]},
+  {featureType:'poi.park',elementType:'geometry',stylers:[{color:'#d4ead4'}]},
+  {featureType:'road',elementType:'geometry',stylers:[{color:'#ffffff'}]},
+  {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#fde8a0'}]},
+  {featureType:'transit.line',elementType:'geometry',stylers:[{color:'#c4b5fd'}]},
+  {featureType:'transit.station',elementType:'labels.icon',stylers:[{saturation:50},{lightness:10}]},
+  {featureType:'administrative.locality',elementType:'labels.text.fill',stylers:[{color:'#2563EB'}]},
+];
+
+function initMap(di){
+  if(maps[di]) return;
+  maps[di] = true;
+  const d = DAYS[di];
+  const el = document.getElementById('gmap'+di);
+  if(!el) return;
+  renderEmbedMap(di, d, el);
+}
+
+function renderEmbedMap(di, d, el){
+  const pts = d.markers.map(m => m.lat+','+m.lng);
+  const origin = encodeURIComponent(pts[0]);
+  const dest = encodeURIComponent(pts[pts.length-1]);
+  const mid = pts.slice(1,-1).map(p=>encodeURIComponent(p));
+  const wayparam = mid.length ? '&waypoints='+mid.join('|') : '';
+
+  let embedUrl;
+  if(pts.length === 1){
+    embedUrl = 'https://www.google.com/maps/embed/v1/place'
+      +'?key='+GKEY
+      +'&q='+origin
+      +'&zoom='+d.zoom;
+  } else {
+    embedUrl = 'https://www.google.com/maps/embed/v1/directions'
+      +'?key='+GKEY
+      +'&origin='+origin
+      +'&destination='+dest
+      +wayparam
+      +'&mode=transit'
+      +'&zoom='+d.zoom
+      +'&language=pt-BR';
+  }
+
+  el.innerHTML = `
+    <iframe
+      src="${embedUrl}"
+      width="100%"
+      height="100%"
+      style="border:0;display:block;width:100%;height:100%"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      title="Mapa do dia ${di+1}">
+    </iframe>`;
+
+  // Add overlay badges after iframe
+  const badge = document.createElement('div');
+  badge.className = 'map-you';
+  badge.innerHTML = '<div class="yd"></div>Rota do dia';
+  if(!el.parentElement.querySelector(".map-you")) el.parentElement.appendChild(badge);
+
+  const btn = document.createElement('button');
+  btn.className = 'sv-btn';
+  btn.textContent = '📍 Abrir no Maps';
+  btn.onclick = () => openDayInMaps(di);
+  if(!el.parentElement.querySelector(".sv-btn")) el.parentElement.appendChild(btn);
+}
+
+function openDayInMaps(di){
+  const d=DAYS[di];
+  const pts=d.markers.map(m=>`${m.lat},${m.lng}`);
+  if(pts.length===1){
+    window.open(`https://maps.apple.com/?ll=${pts[0]}&z=15`,'_blank');
+    return;
+  }
+  // Open in Apple Maps with waypoints (works natively no iPhone)
+  const origin=pts[0];const dest=pts[pts.length-1];
+  const url=`https://maps.apple.com/?saddr=${origin}&daddr=${dest}&dirflg=w`;
+  window.open(url,'_blank');
+}
+
+// ── STREET VIEW ───────────────────────────────────────────────────────────
+function openSV(lat,lng,lbl){
+  document.getElementById('sv-lbl').textContent = lbl;
+  document.getElementById('sv-modal').classList.add('open');
+  const panoEl = document.getElementById('sv-pano');
+  panoEl.innerHTML = `<iframe
+    src="https://www.google.com/maps/embed/v1/streetview?key=${GKEY}&location=${lat},${lng}&heading=165&pitch=0&fov=90"
+    width="100%" height="100%"
+    style="border:0;display:block;width:100%;height:100%"
+    allowfullscreen=""
+    loading="lazy"
+    title="Street View">
+  </iframe>`;
+}
+function closeSV(){ document.getElementById('sv-modal').classList.remove('open'); }
+
+// ── DAY / SCREEN ──────────────────────────────────────────────────────────
+function showDay(n){
+  curDay=n;
+  document.querySelectorAll('.day-panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',i===n+1));
+  document.getElementById('ov').style.display='none';
+  document.getElementById('hdr-loc').textContent=DAYS[n].loc;
+  document.getElementById('pl').textContent=`Dia ${n+1} de 6`;
+  applyWeather(n);
+  setTimeout(()=>{if(true)initMap(n);},150);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showOV(){
+  document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('ov').style.display='block';
+  document.getElementById('hdr-loc').textContent='Paris · Visão geral';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── STEPS ────────────────────────────────────────────────────────────────
+function toggleS(card){card.querySelector('.tl-detail').classList.toggle('open')}
+function doneS(e,btn){
+  e.stopPropagation();
+  const c=btn.closest('.tl-card');
+  const d=c.classList.toggle('done');
+  btn.textContent=d?'✓':'○';
+  done+=d?1:-1;done=Math.max(0,done);
+  const pct=Math.round(done/total*100);
+  document.getElementById('pf').style.width=pct+'%';
+  document.getElementById('px').textContent=done+' paradas concluídas';
+  toast(d?'✓ Marcado!':'Desmarcado');
+}
+let tkSt={};
+function toggleTk(i){const el=document.getElementById('tk'+i);if(!el)return;tkSt[i]=!tkSt[i];el.textContent=tkSt[i]?'✅':'⬜';toast(tkSt[i]?'✅ Ingresso marcado!':'Desmarcado')}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+
+// ── INIT ─────────────────────────────────────────────────────────────────
+function openMaps(e,googleUrl,lat,lng){
+  e.preventDefault();
+  // On iPhone: try Apple Maps first (native), then Google Maps app, then browser
+  const isIphone=/iPhone|iPad|iPod/.test(navigator.userAgent);
+  if(isIphone && lat && lng){
+    // Try Google Maps app deep link first
+    const gmApp=`comgooglemaps://?q=${lat},${lng}&directionsmode=walking`;
+    const appleMap=`maps://maps.apple.com/?ll=${lat},${lng}&z=15`;
+    // Open Google Maps app, fallback to Apple Maps, fallback to browser
+    window.location=gmApp;
+    setTimeout(()=>{window.location=appleMap;},300);
+    setTimeout(()=>{window.open(googleUrl,'_blank');},800);
+  } else {
+    window.open(googleUrl,'_blank');
+  }
+}
+window.addEventListener('load',()=>{buildDays();loadWeather();setSky(1);setTimeout(()=>initMap(0),300);});
+function onGoogleMapsReady(){ /* no-op — using iframes */ }
+</script>
+
+<!-- Google Maps API — versão sem restrição de domínio para uso local -->
+
+<!-- Google Maps loaded via secure iframes -->
+</body>
+</html>
